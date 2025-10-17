@@ -1,4 +1,6 @@
-import { Avatar } from "@mui/material";
+import { Avatar,TextField } from "@mui/material";
+import {TextFieldStyle} from "../NewGame/Newgame"
+import UndoIcon from '@mui/icons-material/Undo';
 function BoardCard({user}){
     return (
         <div className="bg-[#1e293c] rounded-[20px] p-[15px_25px] flex items-center gap-[50px]">
@@ -7,16 +9,20 @@ function BoardCard({user}){
                         1
                     </div>
             </div>
-            <div className="flex gap-[10px]">
-                <Avatar sx={{padding:'5px',border:'1px solid #8a94a8',borderRadius:'7px'}} variant="square" alt={user?.userName} src={user?.ImageUrl} />
+            <div className="flex gap-[30px] flex-[1_1_auto] items-center">
+                <Avatar sx={{padding:'5px',border:'1px solid #8a94a8',borderRadius:'7px',height:80,width:80}} variant="square" alt={user?.userName} src={user?.ImageUrl} />
                 <div>
-                    <p>{user?.userName}</p>
+                    <p className="text-[30px] text-gray-300">{user?.userName}</p>
+                </div>
+                <div className="text-[20px] font-extrabold text-[#555e9c] flex-[1_1_auto] text-right">
+                        {user?.Score || 0}
                 </div>
             </div>
-            <div>
-                {user?.Score}
+            
+            <div className="flex-[1_1_auto] justify-end flex">
+                <div><UndoIcon /></div>
+                <TextField onChange={(e)=>debounceFunction("gameName",e.target.value)} sx={TextFieldStyle} id="outlined-basic" variant="outlined" />    
             </div>
-            <div></div>
         </div>
     );
 }

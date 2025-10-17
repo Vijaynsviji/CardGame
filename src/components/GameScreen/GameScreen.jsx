@@ -6,8 +6,10 @@ import LeaderBoard from './LeaderBoard'
 
 function GameScreen (){
     const {id} = useParams();
-    const gameObjectList = useSelector((state)=>state.game.gameList);
-    const gameObject =gameObjectList.filter(item=>item.ID===id)?.[0];
+    const gameObject = useSelector(
+  (state) => state.game.gameList.find(item => item.ID === id)
+);;
+    // const gameObject =gameObjectList.filter(item=>item.ID===id)?.[0];
     const [isloading,setisloading]=useState(false);
     return (
         <div className="flex flex-col w-full bg-[#0f172b] md:p-[20px] p-[10px] gap-[30px]">

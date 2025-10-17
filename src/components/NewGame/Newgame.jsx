@@ -14,7 +14,7 @@ import {addNewGame} from '../store/gameslice';
 import Button from '@mui/material/Button';
 
 
-const TextFieldStyle = {
+export const TextFieldStyle = {
     input: {
         color: "#fff", // input text color
     },
@@ -54,6 +54,8 @@ function Newgame() {
         ID: 1,
         userName: "",
         ImageUrl: getRandomAvatarImage(),
+                currentScore: 0,
+        scoreAddedList: []
     }]);
 
 
@@ -73,6 +75,8 @@ function Newgame() {
         ID: 1,
         userName: "",
         ImageUrl: getRandomAvatarImage(),
+        currentScore: 0,
+        scoreAddedList: []
     }])
      }
 
@@ -113,6 +117,8 @@ function Newgame() {
             ID: prev.length + 1,
             userName: "",
             ImageUrl: getRandomAvatarImage(),
+            currentScore: 0,
+            scoreAddedList: []
         }])
     }
 
