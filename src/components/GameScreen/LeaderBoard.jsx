@@ -45,8 +45,8 @@ function LeaderBoard ({Users}){
             <div className="hidden md:block">
                 {Users.map(item=><BoardCard key={item?.ID} user={item}/>)}
             </div>
-            <div className="md:hidden">
-                {Users.map(item=><BoardMobile handleUserScoreInput={handleUserScoreInput} key={item?.ID} user={item}/>)}
+            <div className="md:hidden flex flex-col gap-[10px]">
+                {[...Users].sort((a,b)=>a?.currentScore-b?.currentScore).map((item,index)=><BoardMobile Index={index} handleUserScoreInput={handleUserScoreInput} key={item?.ID} user={item}/>)}
             </div>
             <div>
             <Button className="pt-[10px]" style={{backgroundColor: '#028458'}} onClick={()=>{setShowAlert(true)}} variant="contained">Save</Button>

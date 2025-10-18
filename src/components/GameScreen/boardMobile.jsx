@@ -4,9 +4,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useState } from "react";
 import React from "react";
 
+import { useSelector, useDispatch } from 'react-redux'
+import {undoUserScore} from '../store/gameslice';
+
 import {AlertComp} from '../../Utils/Alert';
 
 import {debounce} from "../../Utils/Debounce"
+
+import { useParams } from "react-router-dom";
 
 
 
@@ -40,8 +45,10 @@ const TextFieldStyle = {
 
 let timer = null;
 
-function BoardMobile({user,handleUserScoreInput}){
+function BoardMobile({Index,user,handleUserScoreInput}){
     const [showAlert,setShowAlert] = useState(false);
+    const {id} = useParams();
+    const dispatch = useDispatch()
 
 
     const handleSearch = debounce((ID,text) => {
@@ -49,11 +56,21 @@ function BoardMobile({user,handleUserScoreInput}){
         }, 500);
 
 
+    const handleUndo = ()=>{
+        const payload = {
+            id: id,
+            userId: user.ID
+        }
+        dispatch(undoUserScore(payload));
+        setShowAlert(false);
+    }
+
+
     return (
         <div className="bg-[#1e293c] rounded-[5px] p-[10px 5px] p-[0px_3px] flex items-center gap-[10px]">
             <div className="flex items-center">
                     <div class="text-[15px] text-[#737e91] font-extrabold md:w-[50px] md:h-[50px] p-[5px] rounded-full flex items-center justify-center ">
-                        1
+                        {Index+1}
                     </div>
             </div>
             <div className="flex gap-[15px] flex-[1_1_auto] items-center">
@@ -71,7 +88,7 @@ function BoardMobile({user,handleUserScoreInput}){
                 <TextField onChange={(e)=>handleSearch(user?.ID,e.target.value)} style={{width:'50%', height:'60%'}} sx={TextFieldStyle} id="outlined-basic" type="number" variant="outlined" />    
             </div>
 
-            <AlertComp showAlert={showAlert} setShowAlert={setShowAlert} onSave={()=>{setShowAlert(false)}}/>
+            <AlertComp showAlert={showAlert} setShowAlert={setShowAlert} onSave={()=>{handleUndo()}}/>
         </div>
     );
 }

@@ -34,7 +34,10 @@ function App() {
         {path:'/game/:id',element:<GameScreen/>}
       ],
     },
-  ]);
+    
+  ],{
+    basename: "/CardGame", // 👈 important
+  });
 
   return <RouterProvider router={router} />;
 }

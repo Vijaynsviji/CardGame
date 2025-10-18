@@ -32,10 +32,33 @@ export const GameSlice = createSlice({
 
             localStorage.setItem("GameList",JSON.stringify(state.gameList));
 
+        },
+        undoUserScore: (state,action)=>{
+            state.gameList = state.gameList.map(item=>{
+                if (item.ID === action.payload.id) {
+                        const updatedPlayers = item.players.map(user => {
+                            if(user.ID===action.payload.userId){
+                                const newScoreArr = [...user.scoreAddedList] || [];
+                                const lastScore = newScoreArr?.pop() || 0;
+                                return {
+                                    ...user,
+                                    currentScore: (user.currentScore || 0)  - +lastScore,
+                                    scoreAddedList: newScoreArr
+                                }
+                            }
+                            return user
+                            
+                        });
+                        return {...item,players:updatedPlayers};
+                }
+                return item;
+            });
+
+            localStorage.setItem("GameList",JSON.stringify(state.gameList));
         }
     }
 })
 
-export const { addNewGame,updateUserScore } = GameSlice.actions
+export const { addNewGame,updateUserScore,undoUserScore } = GameSlice.actions
 
 export default GameSlice.reducer
