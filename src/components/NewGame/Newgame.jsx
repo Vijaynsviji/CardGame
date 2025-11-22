@@ -9,9 +9,10 @@ import Alert from '@mui/material/Alert';
 
 import { useSelector, useDispatch } from 'react-redux'
 
-import {addNewGame} from '../store/gameslice';
+import {addNewGame, updateGame} from '../store/gameslice';
 
 import Button from '@mui/material/Button';
+import { useNavigate, useParams } from "react-router-dom";
 
 
 export const TextFieldStyle = {
@@ -43,13 +44,16 @@ let timer = null;
 let newTimer = null;
 
 
-function Newgame() {
+function Newgame({isEdit=false}) {
     const [GameDetails, setGameDetails] = useState({
         ID: uuidv4(),
         gameName: "",
         gameImageUrl: getRandomGameImage(),
         maxPoint: 0,
     })
+    const allGameList = useSelector((state) => state.game.gameList);
+    const {id} = useParams();
+
     const [UserDetails, setUserDetails] = useState([{
         ID: 1,
         userName: "",
@@ -57,6 +61,23 @@ function Newgame() {
                 currentScore: 0,
         scoreAddedList: []
     }]);
+
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        if(isEdit){
+            const game = allGameList.filter(item=>item?.ID===id)?.[0];
+            if(game){
+                 setGameDetails({
+                ID: game?.ID,
+                gameName: game?.gameName,
+                gameImageUrl:game?.gameImageUrl,
+                maxPoint: game?.maxPoint
+            });
+                setUserDetails(game?.players);
+            }
+        }
+    },[isEdit])
 
 
     const [isloading,setIsLoading] = useState(false);
@@ -71,7 +92,7 @@ function Newgame() {
         gameImageUrl: getRandomGameImage(),
         maxPoint: 0,
     })
-    UserDetails([{
+    setUserDetails([{
         ID: 1,
         userName: "",
         ImageUrl: getRandomAvatarImage(),
@@ -136,6 +157,23 @@ function Newgame() {
 
     }
 
+    function editGame (){
+        setIsLoading(true);
+        const newGameTemplate = {
+            ...GameDetails,players: UserDetails,status:"inProgress"
+        }
+
+        dispatch(updateGame(newGameTemplate));
+        setTimeout(()=>{
+            setIsLoading(false);
+            clearForm();
+            setTimeout(()=>{
+
+                navigate("/");
+            },1000)
+        },2000);
+    }
+
 
 
 
@@ -143,11 +181,18 @@ function Newgame() {
     return (
     <div className="flex flex-col w-full bg-[#0f172b] p-[20px] gap-[30px]">
         <div className="flex justify-between">
-             <p className="text-(--Text-color)  text-2xl">New Game</p>
+            {!isEdit && <>
+            <p className="text-(--Text-color)  text-2xl">New Game</p>
             {!isloading?<Button style={{backgroundColor: '#028458'}} onClick={()=>{createNewGame()}} variant="contained">Create</Button>
             :<Alert variant="filled" severity="success">
                 Game Created Successfully
             </Alert>}
+            </>}
+
+            {isEdit && <><p className="text-(--Text-color)  text-2xl">Edit Game</p>{!isloading ? <Button style={{backgroundColor: '#028458'}} onClick={()=>{editGame()}} variant="contained">Edit</Button>
+            :<Alert variant="filled" severity="success">
+                Game Edited Successfully
+            </Alert>}</>  }
         </div>
        
         <div className=" bg-[#0f172b] md:gap-[50px] flex flex-col md:flex md:flex-row w-full text-white gap-[10px]  overflow-hidden">
@@ -161,8 +206,8 @@ function Newgame() {
                
             <div className="flex flex-col flex-[1_1_150px]">
                 <div className="flex flex-[1_1_150px] flex-col gap-[20px]">
-                    <TextField onChange={(e)=>debounceFunction("gameName",e.target.value)} sx={TextFieldStyle} id="outlined-basic" label="Title" variant="outlined" />
-                    <TextField onChange={(e)=>debounceFunction("maxPoint",e.target.value)} sx={TextFieldStyle} id="outlined-basic" label="Enter Max Points" variant="outlined" type="number" />
+                    <TextField onChange={(e)=>handleGameDetailChange("gameName",e.target.value)} InputLabelProps={{ shrink: true }}  value={GameDetails?.gameName} sx={TextFieldStyle} id="outlined-basic" label="Title" variant="outlined" />
+                    <TextField onChange={(e)=>handleGameDetailChange("maxPoint",e.target.value)} InputLabelProps={{ shrink: true }}  value={GameDetails?.maxPoint} sx={TextFieldStyle} id="outlined-basic" label="Enter Max Points" variant="outlined" type="number" />
                 </div>
                 <div className='overflow-auto flex flex-row flex-wrap gap-[20px] [&::-webkit-scrollbar]:hidden scrollbar-none'>
                     {

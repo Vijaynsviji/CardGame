@@ -1,21 +1,28 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AvatarGroup,Avatar,Button } from "@mui/material";
 import LeaderBoard from './LeaderBoard'
 
-function GameScreen (){
+function GameScreen ({type=""}){
     const {id} = useParams();
+    const navigate = useNavigate();
     const gameObject = useSelector(
   (state) => state.game.gameList.find(item => item.ID === id)
 );;
     // const gameObject =gameObjectList.filter(item=>item.ID===id)?.[0];
     const [isloading,setisloading]=useState(false);
+
+    const handleEditGame = ()=>{
+        navigate("/EditGame/" + id)
+    }
+
+
     return (
         <div className="flex flex-col w-full bg-[#0f172b] md:p-[20px] p-[10px] gap-[30px]">
         <div className="flex justify-between">
              <p className="text-(--Text-color)  text-2xl">{gameObject?.gameName}</p>
-            {!isloading?<Button style={{backgroundColor: '#028458'}} onClick={()=>{createNewGame()}} variant="contained">Create</Button>
+            {!isloading?<Button style={{backgroundColor: '#028458'}} onClick={()=>{handleEditGame()}} variant="contained">Edit</Button>
             :<Alert variant="filled" severity="success">
                 Game Saved Successfully
             </Alert>}
@@ -32,7 +39,7 @@ function GameScreen (){
                
             <div className="flex flex-col flex-[1_1_150px]">
                 <div className='overflow-auto flex flex-row flex-wrap gap-[20px] [&::-webkit-scrollbar]:hidden scrollbar-none'>
-                   <LeaderBoard Users={gameObject?.players}/>
+                   <LeaderBoard Users={gameObject?.players} type={type}/>
                 </div>
             </div>
             

@@ -7,7 +7,7 @@ import {useNavigate} from 'react-router';
 function Home (){
     const allGameList = useSelector((state) => state.game.gameList);
     const onGoingGames = allGameList.filter(item=>item?.status==undefined || item.status==="inProgress");
-    const RecentGames = allGameList.filter(item=>item.status === "completed");
+    const RecentGames = allGameList.filter(item=>item.status === "Completed");
     let navigate = useNavigate();
 
 
@@ -19,6 +19,9 @@ function Home (){
         navigate("/game/"+id);
     }
 
+    function onRecentGameClick(id){
+        navigate("/viewgame/"+id);
+    }
 
     return (
         <div className='bg-[#0f172b] w-[100%] overflow-auto p-[20px] flex flex-col gap-[40px]'>  
@@ -40,7 +43,7 @@ function Home (){
             <div className='flex flex-col gap-[20px]'>
                 <p className="text-(--Text-color)  text-2xl">Recent Games</p>
                 <div className='overflow-auto flex flex-row flex-wrap gap-[20px] [&::-webkit-scrollbar]:hidden scrollbar-none'>
-                    { RecentGames.map(item=><GameCard key={item?.ID} GameObject={item} />) 
+                    { RecentGames.map(item=><GameCard onClick={()=>onRecentGameClick(item?.ID)} key={item?.ID} GameObject={item} />) 
                     }
                     
                 </div>

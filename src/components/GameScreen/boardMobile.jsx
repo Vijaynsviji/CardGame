@@ -1,7 +1,7 @@
 import { Avatar,TextField,Snackbar,Button,IconButton } from "@mui/material";
 import UndoIcon from '@mui/icons-material/Undo';
 import CloseIcon from '@mui/icons-material/Close';
-import { useState } from "react";
+import { useRef, useState } from "react";
 import React from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -45,10 +45,11 @@ const TextFieldStyle = {
 
 let timer = null;
 
-function BoardMobile({Index,user,handleUserScoreInput}){
+function BoardMobile({Index,user,handleUserScoreInput,disabled}){
     const [showAlert,setShowAlert] = useState(false);
     const {id} = useParams();
     const dispatch = useDispatch()
+    const ref = useRef();
 
 
     const handleSearch = debounce((ID,text) => {
@@ -84,8 +85,8 @@ function BoardMobile({Index,user,handleUserScoreInput}){
             </div>
             
             <div className="flex-[1_1_auto] gap-[10px] justify-end flex p-[10px] items-center">
-                <div><UndoIcon onClick={()=>{setShowAlert(true)}} /></div>
-                <TextField onChange={(e)=>handleSearch(user?.ID,e.target.value)} style={{width:'50%', height:'60%'}} sx={TextFieldStyle} id="outlined-basic" type="number" variant="outlined" />    
+               {!disabled && <div><UndoIcon onClick={()=>{setShowAlert(true)}} /></div> }
+              { !disabled &&  <TextField ref={ref} onChange={(e)=>handleSearch(user?.ID,e.target.value)} style={{width:'50%', height:'60%'}} sx={TextFieldStyle} id="outlined-basic" type="number" variant="outlined" />   } 
             </div>
 
             <AlertComp showAlert={showAlert} setShowAlert={setShowAlert} onSave={()=>{handleUndo()}}/>

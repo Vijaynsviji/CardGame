@@ -30,7 +30,9 @@ function App() {
       children: [
         { path: '/', element: <Home /> },
         { path: '/Newgame', element: <Newgame /> },
+        { path: '/EditGame/:id', element: <Newgame isEdit={true} /> },
         {path:'/game/:id',element:<GameScreen/>},
+        {path:'/viewgame/:id',element:<GameScreen type={"view"}/>},
         { path: '*', element: <Home /> },
       ],
     },

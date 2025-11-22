@@ -31,6 +31,12 @@ export const GameSlice = createSlice({
             });
 
             localStorage.setItem("GameList",JSON.stringify(state.gameList));
+            
+        },
+        updateGame: (state,action)=>{
+            state.gameList = state.gameList.filter(item=>item?.ID!==action.payload.ID);
+            state.gameList.push(action.payload);
+            localStorage.setItem("GameList",JSON.stringify(state.gameList));
 
         },
         undoUserScore: (state,action)=>{
@@ -55,10 +61,19 @@ export const GameSlice = createSlice({
             });
 
             localStorage.setItem("GameList",JSON.stringify(state.gameList));
+        },
+        finishGame: (state,action)=>{
+            state.gameList = state.gameList.map(item=>{
+                if(item?.ID==action.payload.gameId){
+                    return {...item,status:"Completed"}
+                }
+                return item;
+            })
+            localStorage.setItem("GameList",JSON.stringify(state.gameList));
         }
     }
 })
 
-export const { addNewGame,updateUserScore,undoUserScore } = GameSlice.actions
+export const { addNewGame,updateUserScore,undoUserScore,finishGame ,updateGame} = GameSlice.actions
 
 export default GameSlice.reducer
